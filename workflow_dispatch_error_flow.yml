@@ -1,0 +1,81 @@
+name: ジョブ通知テスト
+
+on:
+  workflow_dispatch:
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ステップ1
+        run: echo "ジョブ1を実行中"
+
+      - name: Your Conditional Step
+        if: failure()
+        run: |
+          echo "This step runs only if the previous steps failed"
+
+  job2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ステップ1
+        run: |
+          echo "ジョブ2を実行中"
+          echo "success=True" >> $GITHUB_OUTPUT    
+          exit 1
+
+      - name: Your Conditional Step
+        if: failure()
+        run: |
+          echo "This step runs only if the previous steps failed"
+
+  job3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ステップ1
+        run: echo ${{ needs.job2.outputs.success }}
+    
+  job21:
+    runs-on: ubuntu-latest
+    needs: job2
+    if: always()
+    steps:
+      - name: ステップ21
+        run: |
+          echo "ジョブ2を実行中"
+          echo "success=True" >> $GITHUB_OUTPUT    
+
+      - name: Notify Success
+        id: notify_success
+        if: needs.job2.outputs.success == 'True'
+        run: |
+          echo "Notify success!"
+      - name: Notify Failure
+        if: needs.job2.outputs.success != 'True'
+        run: |
+          echo "Notify failure!"
+
+
+  # notify:
+  #   runs-on: ubuntu-latest
+  #   needs: [job1, job2, job3]
+  #   if: failure() || needs.job1.result == 'failure' || needs.job2.result == 'failure' 
+  #   steps:
+  #     - name: Slack Notification on Failure
+  #       uses: rtCamp/action-slack-notify@v2.0.2
+  #       env:
+  #         SLACK_TITLE: "Failure ${{ github.repository }} : ${{ github.event.ref }} : proton terraform apply"
+  #         SLACK_MESSAGE: "terraformによる構築で失敗を検知しました。"
+  #         SLACK_USERNAME: github action
+  #         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL_RELEASE_DEV }}
+  #         SLACK_COLOR: danger
+
+        # uses: 8398a7/action-slack@v3.8.0
+        # with:
+        #   status: failure
+        #   author_name: terraform workflow failed
+        #   fields: repo,message,commit,action,job,took,eventName,ref,workflow
+        #   mention: 'subteam^SHU57FV5E' 
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_RELEASE_DEV }}

@@ -1,0 +1,15 @@
+name: on_concurrency_test_3
+
+concurrency:
+  concurrency_group_3
+
+on:
+  workflow_dispatch:
+
+jobs:
+  concurrency_workflow:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - run: sleep 90
+

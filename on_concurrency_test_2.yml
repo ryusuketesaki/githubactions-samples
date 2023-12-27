@@ -1,0 +1,29 @@
+name: on_concurrency_test_2
+
+
+on:
+  workflow_dispatch:
+
+jobs:
+  non_concurrency_workflow:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - run: sleep 20
+      
+  concurrency_workflow:
+    runs-on: ubuntu-20.04
+    concurrency:
+      concurrency_group_2
+    steps:
+      - uses: actions/checkout@v3
+      - run: sleep 20
+
+  # concurrency_workflow_2:
+  #   runs-on: ubuntu-20.04
+  #   concurrency:
+  #     concurrency_group_2
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - run: sleep 60
+  

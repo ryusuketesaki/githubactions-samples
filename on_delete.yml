@@ -1,0 +1,17 @@
+name: on delete
+on:
+  delete:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Run an one-line script
+        run: |
+          echo Run only when branch "${{ github.event.ref }}" 
+
+      - name: Run an one-line script
+        run: |
+          echo Run only when branch "${{ github.event.ref }}" is deleted
+        if: startsWith(github.event.ref, 'test/')

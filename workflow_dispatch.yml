@@ -1,0 +1,34 @@
+name: Auto Merge
+on:
+  workflow_dispatch:
+
+
+permissions:
+  pull-requests: write
+  contents: write
+  id-token: write
+
+jobs:
+  service_destroy:
+    name: service_destroy
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Configure AWS Credentials
+      id: assume_role
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-region: ap-northeast-1
+        role-to-assume: arn:aws:iam::054351901882:role/GithubActionsRole
+        role-session-name: TF-Github-Actions
+        mask-aws-account-id: 'no'
+
+    - name: drop service
+      id: drop_service
+      run: >
+        aws lambda invoke 
+        --function-name delete-proton-service
+        --payload '{"target_strings": ["deploytest6","deploytest5","deploytest4"]}' 
+        --cli-binary-format raw-in-base64-out output.json
+  
+        
