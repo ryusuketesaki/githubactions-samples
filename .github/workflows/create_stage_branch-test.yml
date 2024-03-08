@@ -18,11 +18,16 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
 
     - name: Merge master into stage/master
+      env:
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       run: |
-        git config user.name github-actions
-        git config user.email github-actions@github.com
+        git config user.name ryusuketesaki
+        git config user.email ryusuke.tesaki@i-plug.co.jp
         git fetch
         git checkout stage/main
         git merge --allow-unrelated-histories -Xtheirs main --no-edit
