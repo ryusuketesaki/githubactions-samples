@@ -1,5 +1,5 @@
-name: stage/master push test
 
+name: stage/master push test
 on:
   push:
     branches:

@@ -24,7 +24,7 @@ jobs:
         git config user.name github-actions
         git config user.email github-actions@github.com
         git fetch
-        git checkout stage/master
-        git merge --allow-unrelated-histories -Xtheirs master --no-edit
+        git checkout stage/main
+        git merge --allow-unrelated-histories -Xtheirs main --no-edit
         git commit --allow-empty -m "test"
-        git push origin stage/master
+        git push origin stage/main
